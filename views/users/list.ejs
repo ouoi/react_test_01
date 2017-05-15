@@ -1,0 +1,25 @@
+<% include ../header.ejs %>
+	<br>
+	<h1>사용자 목록</h1>
+	<br>
+	<table class="table table-bordered table-hover">
+		<colgroup>
+			<col style="width: 200px;"/>
+			<col />
+			<col style="width: 200px;"/>
+		</colgroup>
+		<tr>
+			<th class="text-center active">ID</th>
+			<th class="text-center active">이름</th>
+			<th class="text-center active">등록일</th>
+		</tr>
+		<% users.forEach(function (user) { %>
+		<tr>
+			<td class="text-center"><%=user.username%></td>
+			<td><a href="/users/<%=user.id%>"><%=user.username%></a></td>
+			<td class="text-center"><%=user.getDate%></td>
+		</tr>
+		<% }); %>
+	</table>
+
+<% include ../footer.ejs %>

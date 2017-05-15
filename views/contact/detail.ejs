@@ -1,0 +1,44 @@
+<% include ../header.ejs %>
+
+<div class="panel panel-default">
+	<div class="panel-heading"><%=contact.title%></div>
+	<div class="panel-body">
+		<div style="padding-bottom: 10px">작성일 : <%=contact.getDate%></div>
+		<%=contact.content%>
+	
+		<hr />
+		<!-- 댓글영역  -->
+		<div id="comment_area">
+			
+		</div>
+
+		<div><label>댓글작성하기</label>
+			<form id="commentForm" action="" method="post">
+				<input type="hidden" name="post_id" value="<%=contact.id%>" />
+				<div class="row">
+					<div class="col-xs-9">
+						<textarea class="form-control" name="content"></textarea>
+					</div>
+					<div class="col-xs-3 text-center">
+						<button class="btn btn-primary">댓글작성</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- 댓글영역  -->
+	</div>
+</div>
+
+<a href="/contact" class="btn btn-default">목록으로</a>
+<a href="/contact/edit/<%=contact.id%>" class="btn btn-primary">수정</a>
+<a href="/contact/delete/<%=contact.id%>" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</a>
+
+<script type="text/javascript">
+	(function () {
+		$(document).ready(function () {
+			
+		});
+	})();
+</script>
+
+<% include ../footer.ejs %>

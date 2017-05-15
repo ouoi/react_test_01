@@ -1,0 +1,50 @@
+<% include ../header.ejs %>
+
+<h1>정보 수정</h1>
+<form action="" method="post">
+	<input type="hidden" name="_csrf" value="<%=csrfToken%>" />
+	<table class="table table-bordered table-hover">
+		<colgroup>
+			<col style="width: 200px;"/>
+			<col />
+		</colgroup>
+		<tr>
+			<th class="text-center active">ID</th>
+			<td><%=user.username%></td>
+		</tr>
+		<tr>
+			<th class="text-center active">이름</th>
+			<td>
+				<input type="text" name="displayname" class="form-control" value="<%=user.displayname%>" autofocus="" required=""/>
+			</td>
+		</tr>
+		<tr>
+			<th class="text-center active">생일</th>
+			<td>
+				<input type="date" name="birthday" class="form-control" value="<%=profile.getBirthday%>" style="width: 200px;"/>
+			</td>
+		</tr>
+		<tr>
+			<th class="text-center active">전화번호</th>
+			<td>
+				<input type="text" name="phone" class="form-control" value="<%=profile.phone%>"  style="width: 200px;"/>
+			</td>
+		</tr>
+		<tr>
+			<th class="text-center active">성별</th>
+			<td>
+				<label><input type="radio" name="gender" value="male" <% if (!profile.gender || profile.gender == 'male') {%>checked<%}%>/> 남자</label> &nbsp;&nbsp;&nbsp;&nbsp;
+				<label><input type="radio" name="gender" value="female" <% if (profile.gender == 'female') {%>checked<%}%>/> 여자</label>
+			</td>
+		</tr>
+	</table>
+	
+	<button class="btn btn-primary">저장하기</button>
+	<button class="btn btn-default" onclick="history.back();">취소</button>
+</form>
+
+<script type="text/javascript">
+	
+</script>
+
+<% include ../footer.ejs %>
