@@ -5,3 +5,7 @@ body {
 table td, table th {
 	vertical-align: middle !important;
 }
+
+#root {
+	padding-top: 10px;
+}

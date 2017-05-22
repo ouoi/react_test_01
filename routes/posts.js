@@ -36,9 +36,9 @@ var storage = multer.diskStorage({
 var upload = multer({storage: storage});
 
 // 글 리스트 페이지
-router.get('/', function (request, response) {
-	PostModel.find({}, function (err, data) {
-		response.render('posts/list', {posts: data});
+router.get('/list', function (request, response) {
+	PostModel.find({}, (err , posts) => {
+		response.json({posts: posts});
 	});
 });
 

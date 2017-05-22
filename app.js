@@ -98,12 +98,16 @@ app.use('/', index);
 
 /* start - ldw 페이지 연동 */
 app.use('/users', users);
-app.use('/profile', profile);
-app.use('/posts', posts);
-app.use('/contact', contact);
-app.use('/accounts', accounts);
-app.use('/auth', auth);
-app.use('/chat', chat);
+app.use('/v1/profile', profile);
+app.use('/v1/posts', posts);
+app.use('/v1/contact', contact);
+app.use('/v1/accounts', accounts);
+app.use('/v1/auth', auth);
+app.use('/v1/chat', chat);
+
+app.get('*', function(request, response) {
+	response.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+});
 /* end - ldw */
 
 // catch 404 and forward to error handler

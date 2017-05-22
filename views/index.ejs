@@ -1,20 +1,20 @@
 <% include ./header.ejs %>
 
-	<div class="container" id="masonry_container">
-		<% posts.forEach(function(post) { %>
-		<div class="masonry-grid">
-			<a href="/posts/detail/<%=post.id%>">
-				<% if (post.thumbnail) { %>
-					<img src="/uploads/<%=post.thumbnail%>">
-				<% } %>
-				<p>
-					<%=post.title%><br />
-					<small>by <%=post.username%>(<%=post.getDate%>)</small>
-				</p>
-			</a>
-		</div>
-		<% }); %>
+<div class="container" id="masonry_container">
+	<% posts.forEach(function(post) { %>
+	<div class="masonry-grid">
+		<a href="/posts/detail/<%=post.id%>">
+			<% if (post.thumbnail) { %>
+				<img src="/uploads/<%=post.thumbnail%>">
+			<% } %>
+			<p>
+				<%=post.title%><br />
+				<small>by <%=post.username%>(<%=post.getDate%>)</small>
+			</p>
+		</a>
 	</div>
+	<% }); %>
+</div>
 
 <style type="text/css">
 	.masonry-grid { margin-bottom: 14px; }
