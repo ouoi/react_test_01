@@ -12,13 +12,13 @@ var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 
 // 처음 로그인시 호출
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
 	console.log('serializeUser - facebook');
 	done(null, user);
 });
 
 // 로그인 후 조회시 호출
-passport.deserializeUser(function (user, done) {
+passport.deserializeUser((user, done) => {
 	console.log('deserializeUser - facebook');
 	done(null, user);
 });
@@ -70,7 +70,7 @@ router.get('/facebook/success', function (request, response) {
 
 // 페이스북 로그인 실패
 router.get('/facebook/fail', function (request, response) {
-	response.render('accounts/login', {flashMessage: 'Facebook Login Fail'});
+	response.send('Facebook Login Fail');
 });
 
 module.exports = router;

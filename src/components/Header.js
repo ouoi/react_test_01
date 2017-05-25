@@ -24,7 +24,6 @@ class Header extends Component {
 						<LinkContainer to="/accounts/login">
 							<NavItem>Login</NavItem>
 						</LinkContainer>
-						<NavItem>Chat</NavItem>
 					</Nav>
 				</Navbar.Collapse>
 			</Navbar>

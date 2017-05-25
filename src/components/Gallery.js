@@ -12,9 +12,7 @@ class Gallery extends React.Component {
 		let childElements = this.props.posts.map(function(post, key){
 			return (
 				<li key={key} className={ Styles.li_max }>
-					<Link to={`/p/${post.id}`}>
-						<img src={`/uploads/${post.thumbnail}`} className={ Styles.img_max } />
-					</Link>
+					<img src={`/uploads/${post.thumbnail}`} className={Styles.img_max} />
 					<p className={ Styles.p_padding }>
 						{ post.title }<br />
 						by { post.username }

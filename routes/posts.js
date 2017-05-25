@@ -12,13 +12,6 @@ var CommentModel = require('../models/CommentModel.js');
 // 로그인 체크 모듈
 var loginRequired = require('../libs/loginRequired');
 
-// generator 모듈
-var co = require('co');
-
-// CSRF 설정
-var csrf = require('csurf');
-var csrfProtection = csrf({cookie: true});
-
 // file upload
 var path = require('path');
 var uploadDir = path.join(__dirname, '../uploads');
@@ -36,55 +29,49 @@ var storage = multer.diskStorage({
 var upload = multer({storage: storage});
 
 // 글 리스트 페이지
-router.get('/list', function (request, response) {
+router.get('/list', (request, response) => {
 	PostModel.find({}, (err , posts) => {
 		response.json({posts: posts});
 	});
 });
 
 // 글 작성 페이지
-router.get('/write', loginRequired, csrfProtection, function (request, response) {
-	response.render('posts/form', {post : '', csrfToken: request.csrfToken()});
+router.get('/write', loginRequired, function (request, response) {
+	response.render('posts/form', {post : ''});
 });
 
 // 글 작성
-router.post('/write', loginRequired, upload.single('thumbnail'), csrfProtection, function (request, response) {
+router.post('/write', loginRequired, upload.single('thumbnail'), function (request, response) {
 	var body = request.body;
 	var post = new PostModel({
 		title: body.title,
 		content: body.content,
-		thumbnail : (request.file) ? request.file.filename : "",
+		thumbnail: (request.file) ? request.file.filename : "",
 		username: request.user.displayname
 	});
 
 	// validation check
 	var validationError = post.validateSync();
 	if (validationError) {
-		response.send(validationError.errors.title.message);
+		response.send(validationError);
 	} else {
-		post.save(function (err) {
-			response.redirect('/posts');
+		post.save((err) => {
+			response.json({message:"success"});
 		});
 	}
 });
 
-// 상세글 페이지
-router.get('/detail/:id', csrfProtection, function (request, response) {
-	var getPost = co(function* () {
-		var post = yield PostModel.findOne({id: request.params.id}).exec();
-		var comments = yield CommentModel.find({post_id: request.params.id}).exec(); 
-		return {
-			post: post,
-			comments: comments
-		};
-	});
-	getPost.then(result => {
-		response.render('posts/detail', {post: result.post, comments: result.comments, csrfToken: request.csrfToken()});
+// 글 상세 정보
+router.get('/detail/:id', (request, response) => {
+	PostModel.findOne({id: request.params.id}, (err, post) => {
+		CommentModel.find({post_id: request.params.id}, (err, comments) => {
+			response.json({post: post, comments: comments});
+		});
 	});
 });
 
 // 글 수정 페이지
-router.get('/edit/:id', loginRequired, csrfProtection, function (request, response) {
+router.get('/edit/:id', loginRequired, function (request, response) {
 	PostModel.findOne(
 		{id: request.params.id}, 
 		function (err, data) {
@@ -94,7 +81,7 @@ router.get('/edit/:id', loginRequired, csrfProtection, function (request, respon
 });
 
 // 글 수정
-router.post('/edit/:id', loginRequired, upload.single('thumbnail'), csrfProtection, function (request, response) {
+router.post('/edit/:id', loginRequired, upload.single('thumbnail'), function (request, response) {
 	// 이전 파일명 얻기
 	PostModel.findOne({id: request.params.id}, function (err, post) {
 		// 파일이 존재할 경우 이전 이미지 삭제
@@ -125,9 +112,9 @@ router.post('/edit/:id', loginRequired, upload.single('thumbnail'), csrfProtecti
 });
 
 // 글 삭제
-router.get('/delete/:id', csrfProtection, function (request, response) {
+router.get('/delete/:id', (request, response) => {
 	// 파일 삭제를 위한 조회
-	PostModel.findOne({id: request.params.id}, function (err, post) {
+	PostModel.findOne({id: request.params.id}, (err, post) => {
 		// 파일이 존재할 경우 이전 이미지 삭제
 		if (post.thumbnail) {
 			fs.unlinkSync(uploadDir + '/' + post.thumbnail);
@@ -135,39 +122,11 @@ router.get('/delete/:id', csrfProtection, function (request, response) {
 		
 		PostModel.remove(
 			{id: request.params.id}, 
-			function (err) {
+			(err) => {
 				response.redirect('/posts');
 			}
 		);
 	});
-});
-
-
-/********** comment **********/
-// ajax 댓글 추가
-router.post('/ajax_comment/insert', csrfProtection, function (request, response) {
-	var body = request.body;
-	var comment = new CommentModel({
-		content: body.content,
-		post_id: parseInt(body.post_id)
-	});
-	comment.save(function (err, data) {
-		response.json({
-			id: data.id,
-			content: data.content,
-			message: 'success'
-		});
-	});
-});
-
-// ajax 댓글 삭제
-router.post('/ajax_comment/delete', function (request, response) {
-	CommentModel.remove(
-		{id: request.body.comment_id}, 
-		function (err) {
-			response.json({message: 'success'});
-		}
-	);
 });
 
 module.exports = router;

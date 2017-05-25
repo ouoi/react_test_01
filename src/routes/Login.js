@@ -41,6 +41,9 @@ class Login extends Component {
 		}).then((res) => {
 			if (res.data.message === "success") {
 				alert('로그인이 성공하였습니다.');
+				document.location.href = "/posts";
+			} else {
+				alert(res.data.message);
 			}
 		}).catch((error) => {
 			console.log(error);
@@ -62,10 +65,7 @@ class Login extends Component {
 										<input className="form-control" placeholder="ID" name="username" ref="usernameRef" value={this.state.username} onChange={this.handleChange} type="text" required="" />
 									</div>
 									<div className="form-group">
-										<input className="form-control" placeholder="Password" name="password" ref="passwordRef" value={this.state.password} onChange={this.handleChange} type="password"  required="" />
-									</div>
-									<div className="form-group">
-										<input className="form-control" placeholder="Password 확인" name="password2" type="password" required="" />
+										<input className="form-control" placeholder="Password" name="password" ref="passwordRef" value={this.state.password} onChange={this.handleChange} type="password" required="" />
 									</div>
 									<input type="submit" className="btn btn-lg btn-success btn-block" value="로그인" />
 									<div style={{ marginTop: "10px" }}>

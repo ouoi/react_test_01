@@ -3,7 +3,9 @@ import { Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
 import getDate from '../libs/getDate';
 
+// 글 상세
 class PostDetail extends Component {
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -40,12 +42,12 @@ class PostDetail extends Component {
 
 				<Modal.Body>
 					<div>작성일: {dateObj.year}.{dateObj.month}.{dateObj.day}</div>
-					<img src={`/uploads/${this.state.post.thumbnail}`} alt="" />
+					<br/>
+					<img src={`/uploads/${this.state.post.thumbnail}`} alt="" className="image_width"/>
 				</Modal.Body>
 
 				<Modal.Footer>
 					<Button onClick={this.historyBack}>Close</Button>
-					<Button bsStyle="primary">Save changes</Button>
 				</Modal.Footer>
 			</Modal>
 		);

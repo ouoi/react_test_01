@@ -9,3 +9,7 @@ table td, table th {
 #root {
 	padding-top: 10px;
 }
+
+.image_width {
+	width: 100%;
+}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from '../routes/Home';
 import Posts from '../routes/Posts';
+import PostForm from './PostForm';
 import Join from '../routes/Join';
 import Login from '../routes/Login';
 import Header from './Header';
@@ -16,6 +17,7 @@ class App extends Component {
 					<Switch>
 						<Route path="/" component={Home} exact />
 						<Route path="/posts" component={Posts} />
+						<Route path="/write" component={PostForm} />
 						<Route path="/accounts/join" component={Join} />
 						<Route path="/accounts/login" component={Login} />
 						<Route component={NotMatch} />

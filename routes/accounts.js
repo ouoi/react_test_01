@@ -13,14 +13,14 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 // 처음 로그인시 호출
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
 	console.log('serializeUser');
 	delete user.password;
 	done(null, user);
 });
 
 // 로그인 후 조회시 호출
-passport.deserializeUser(function (user, done) {
+passport.deserializeUser((user, done) => {
 	console.log('deserializeUser');
 	delete user.password;
 	done(null, user);
@@ -31,13 +31,13 @@ passport.use(new LocalStrategy({
 		passwordField: 'password',
 		passReqToCallback: true
 	},
-	function (request, username, password, done) {
+	(request, username, password, done) => {
 		UserModel.findOne(
 			{
 				username: username, 
 				password: passwordHash(password)
 			},
-			function (err, user) {
+			(err, user) => {
 				if (!user) {
 					return done(null, false, {message: '아이디 또는 비밀번호 오류 입니다.'});
 				} else {
@@ -49,17 +49,17 @@ passport.use(new LocalStrategy({
 );
 
 
-router.get('/', function (request, response) {
+router.get('/', (request, response) => {
 	response.send('accounts');
 });
 
 // 회원가입 페이지
-router.get('/join', function (request, response) {
+router.get('/join', (request, response) => {
 	response.render('accounts/join');
 });
 
 // 회원가입
-router.post('/join', function (request, response) {
+router.post('/join', (request, response) => {
 	var body = request.body;
 	var User = new UserModel({
 		username: body.username,
@@ -67,36 +67,42 @@ router.post('/join', function (request, response) {
 		password: passwordHash(body.password)
 	});
 
-	User.save(function (err) {
-		response.send('<script>alert("회원가입 성공");location.href="/accounts/login";</script>');
+	User.save((err) => {
+		response.json({message: "success"});
 	});
 });
 
 // 로그인 페이지
-router.get('/login', function (request, response) {
+router.get('/login', (request, response) => {
 	response.render('accounts/login', {flashMessage: request.flash().error});
 });
 
 // 로그인
-router.post('/login', 
-	passport.authenticate('local', {
-		failureRedirect: '/accounts/login',
-		failureFlash: true
-	}),
-	function (request, response) {
-		response.send('<script>alert("로그인 성공");location.href="/posts";</script>');
-	}
-);
+router.post('/login', (request, response, next) => {
+	passport.authenticate('local', (err, user, info) => {
+		if (!user) {
+			return response.json({message: info.message});
+		}
+		request.logIn(user, (err) => {
+			return response.json({message: "success"});
+		});
+	})(request, response, next);
+});
 
 // 로그인 성공
-router.get('/success', function (request, response) {
+router.get('/success', (request, response) => {
 	response.send(request.user);
 });
 
 // 로그아웃
-router.get('/logout', function (request, response) {
+router.get('/logout', (request, response) => {
 	request.logout();
 	response.redirect('/accounts/login');
+});
+
+// 로그인 상태
+router.get('/status', (request, response) => {
+	response.json({isLogin: request.isAuthenticated()});
 });
 
 module.exports = router;
